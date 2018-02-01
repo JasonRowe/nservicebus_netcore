@@ -13,9 +13,9 @@ namespace server
 			var endpointConfiguration = new EndpointConfiguration("example.server");
 			endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
 			endpointConfiguration.EnableInstallers();
-			endpointConfiguration.UsePersistence<LearningPersistence>();
-			endpointConfiguration.UseTransport<LearningTransport>();
-			endpointConfiguration.SendFailedMessagesTo("error");
+			var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
+			transport.UseDirectRoutingTopology();
+			transport.ConnectionString("host=rabbitserver");
 
 			var conventions = endpointConfiguration.Conventions();
 			conventions.DefiningCommandsAs(
